@@ -20,7 +20,112 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #90cdf4;
+  color: black;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* CONTENEDORES */
+
+.container-page {
+  @apply max-w-6xl mx-auto p-6;
+}
+
+/* TÍTULOS */
+
+.title-page {
+  @apply text-4xl font-bold mb-8;
+}
+
+.title-section {
+  @apply text-2xl font-semibold mb-4;
+}
+
+/* BOTONES */
+
+.button-primary {
+  @apply bg-black text-white px-4 py-2 rounded;
+}
+
+/* TABLAS */
+
+.table-base {
+  @apply w-full border border-gray-300;
+}
+
+.table-head {
+  @apply border-b bg-gray-100;
+}
+
+.table-cell {
+  @apply p-3 text-left;
+}
+
+.table-wrapper {
+  @apply bg-white border border-gray-200 shadow-sm;
+}
+
+/* ESTADOS */
+
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* ACTIVO */
+.status-active {
+  background: #e6f7ee;
+  color: #1f7a4d;
+  border: 1px solid #b7ebc6;
+}
+
+/* USADO */
+.status-used {
+  background: #f2f2f2;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+/* ACCIONES TABLA */
+
+.action-link {
+  @apply underline cursor-pointer;
+}
+
+.action-open {
+  @apply text-blue-600;
+}
+
+.action-reset {
+  @apply text-orange-600;
+}
+
+/* BOTONES */
+
+.button-dark {
+  @apply bg-black text-white px-4 py-2 rounded;
+}
+
+/* ACCIONES */
+
+.action-link {
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.action-open {
+  color: #2563eb;
+}
+
+.action-reset {
+  color: #ca8a04;
+}
+
+.action-print {
+  color: #7c3aed;
 }

@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
+
+
+# local database
+dev.db
+prisma/dev.db
+
+# generated qr images
+public/qrcodes
+
+# local docs
+documentos
