@@ -8,7 +8,29 @@ import {
   Td,
 } from "@/components/ui/Table";
 
-export default async function AdminPage() {
+type Props = {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+};
+
+export default async function AdminPage({
+  searchParams,
+}: Props) {
+
+  const params = await searchParams;
+
+  const page = Number(params.page || "1");
+
+  const limit = 10;
+
+  const skip = (page - 1) * limit;
+
+  const totalQrs = await prisma.qrCode.count();
+
+  const totalPages = Math.ceil(
+    totalQrs / limit
+  );
 
   const qrCodes = await prisma.qrCode.findMany({
 
@@ -20,13 +42,22 @@ export default async function AdminPage() {
       qrNumber: "asc",
     },
 
+    skip,
+
+    take: limit,
+
   });
 
   return (
 
     <main className="container-page">
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="
+        flex
+        items-center
+        justify-between
+        mb-6
+      ">
 
         <h1 className="title-page">
           Panel Admin
@@ -48,6 +79,16 @@ export default async function AdminPage() {
         </Link>
 
       </div>
+
+      <p className="text-sm text-gray-500 mb-3">
+
+  	QR {String(qrCodes[0]?.qrNumber).padStart(4, "0")}
+  	   {" "}al{" "}
+  	   QR {String(
+    	   qrCodes[qrCodes.length - 1]?.qrNumber
+    	   ).padStart(4, "0")}
+
+      </p>
 
       <TableWrapper>
 
@@ -115,6 +156,60 @@ export default async function AdminPage() {
         </tbody>
 
       </TableWrapper>
+
+      <div className="
+        flex
+        items-center
+        justify-center
+        gap-4
+        mt-8
+      ">
+
+        {page > 1 && (
+
+          <Link
+            href={`/admin?page=${page - 1}`}
+            className="
+              px-4
+              py-2
+              bg-white
+              border
+              rounded-xl
+              shadow-sm
+              hover:bg-gray-100
+            "
+          >
+            ← Anterior
+          </Link>
+
+        )}
+
+        <span className="text-sm">
+
+          Página {page} de {totalPages}
+
+        </span>
+
+        {page < totalPages && (
+
+          <Link
+            href={`/admin?page=${page + 1}`}
+            className="
+              px-4
+              py-2
+              bg-white
+              border
+              rounded-xl
+              shadow-sm
+              hover:bg-gray-100
+            "
+          >
+            Siguiente →
+          </Link>
+
+        )}
+
+      </div>
 
     </main>
 
