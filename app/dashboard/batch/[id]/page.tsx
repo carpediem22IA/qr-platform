@@ -115,11 +115,27 @@ export default async function BatchPage({ params }: Props) {
 
       </h1>
 
-      <p className="mb-6">
+      <p className="text-sm text-gray-500">
 
-        Total QR: {batch.qrCodes.length}
+  	QR
+  	{String(
+   	 batch.qrCodes[0]?.qrNumber
+  	).padStart(4, "0")}
 
-      </p>
+  	{" "}al{" "}
+
+  	QR
+ 	{String(
+    	 batch.qrCodes[
+      	  batch.qrCodes.length - 1
+    	]?.qrNumber
+       ).padStart(4, "0")}
+
+       {" · "}
+
+  	Total: {batch.qrCodes.length} QR's
+
+	</p>
 
       <TableWrapper>
 

@@ -6,10 +6,21 @@ export function TableWrapper({ children }: Props) {
 
   return (
 
-    <div className="bg-white rounded-2xl shadow overflow-x-auto">
+    <div className="
+      w-full
+      overflow-x-auto
+      bg-white
+      rounded-2xl
+      shadow
+    ">
 
-      <table className="w-full min-w-[1100px]">
+      <table className="
+        w-full
+        min-w-[900px]
+      ">
+
         {children}
+
       </table>
 
     </div>

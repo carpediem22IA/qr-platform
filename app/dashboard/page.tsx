@@ -69,19 +69,21 @@ export default function DashboardPage() {
       <div className="flex gap-4 mb-6">
 
         <select
-          value={quantity}
-          onChange={(e) =>
-            setQuantity(Number(e.target.value))
-          }
-          className="border px-3 py-2 rounded bg-white"
-        >
-          <option value={10}>10 QR</option>
-          <option value={20}>20 QR</option>
-          <option value={30}>30 QR</option>
-          <option value={40}>40 QR</option>
-          <option value={50}>50 QR</option>
-        </select>
+  	 id="quantity"
+  	 name="quantity"
+  	 value={quantity}
+  	 onChange={(e) =>
+    	  setQuantity(Number(e.target.value))
+  	}
+  	 className="border px-3 py-2 rounded bg-white"
+	>
 
+  <option value={10}>10 QR</option>
+  <option value={20}>20 QR</option>
+  <option value={30}>30 QR</option>
+  <option value={40}>40 QR</option>
+  <option value={50}>50 QR</option>
+</select>
         <button
           onClick={createQR}
           className="button-primary"
