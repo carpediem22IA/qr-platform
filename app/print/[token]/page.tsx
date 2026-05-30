@@ -1,9 +1,12 @@
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
-import PrintButton from "@/components/PrintButton";
-import Card from "@/components/ui/Card";
-import InfoSection from "@/components/ui/InfoSection";
 
+import { notFound } from "next/navigation";
+
+import PrintButton from "@/components/PrintButton";
+
+import Card from "@/components/ui/Card";
+
+import InfoSection from "@/components/ui/InfoSection";
 
 type Props = {
   params: Promise<{
@@ -30,7 +33,9 @@ export default async function PrintPage({
   });
 
   if (!qr) {
+
     notFound();
+
   }
 
   return (
@@ -46,14 +51,19 @@ export default async function PrintPage({
         <img
           src={`/qrcodes/${qr.token}.png`}
           alt="QR"
-          className="w-64 mx-auto mb-6"
+          className="
+            w-64
+            mx-auto
+            mb-6
+          "
         />
 
         <InfoSection>
 
           <p>
             <strong>QR:</strong>{" "}
-            QR-{String(qr.qrNumber).padStart(4, "0")}
+            QR-{String(qr.qrNumber)
+              .padStart(4, "0")}
           </p>
 
           <p>
@@ -63,7 +73,9 @@ export default async function PrintPage({
 
           <p>
             <strong>Creación:</strong>{" "}
-            {new Date(qr.createdAt).toLocaleString()}
+            {new Date(
+              qr.createdAt
+            ).toLocaleString()}
           </p>
 
           <p>
@@ -73,10 +85,14 @@ export default async function PrintPage({
 
         </InfoSection>
 
-        <PrintButton />
+        <PrintButton
+          backHref={`/dashboard/batch/${qr.batch.id}`}
+        />
 
       </Card>
 
     </main>
+
   );
+
 }

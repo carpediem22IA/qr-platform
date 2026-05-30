@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 
 import Link from "next/link";
 
+import ScrollTopButton from "@/components/ui/ScrollTopButton";
+
 import {
   TableWrapper,
   Th,
@@ -14,7 +16,9 @@ type Props = {
   }>;
 };
 
-export default async function BatchPage({ params }: Props) {
+export default async function BatchPage({
+  params,
+}: Props) {
 
   const { id } = await params;
 
@@ -74,40 +78,49 @@ export default async function BatchPage({ params }: Props) {
 
     <main className="container-page">
 
-      <Link
-        href="/dashboard"
-        className="
-          inline-block
-          mb-4
-          px-4
-          py-2
-          bg-white
-          border
-          rounded-xl
-          shadow-sm
-          hover:bg-gray-100
-        "
-      >
-        ← Volver al dashboard
-      </Link>
+      <div className="
+        flex
+        flex-col
+        sm:flex-row
+        gap-4
+        mb-6
+      ">
 
-      <Link
-  	href={`/print/batch/${batch.id}`}
-  	className="
-    	inline-block
-    	mb-6
-    	ml-4
-    	px-4
-    	py-2
-    	bg-blue-600
-    	text-white
-    	rounded-xl
-    	shadow-sm
-    	hover:bg-blue-700
-  	"
-	>
-  	Imprimir lote
-      </Link>
+        <Link
+          href="/dashboard"
+          className="
+            inline-block
+            px-4
+            py-2
+            bg-white
+            border
+            rounded-xl
+            shadow-sm
+            hover:bg-gray-100
+            text-center
+          "
+        >
+          ← Volver al dashboard
+        </Link>
+
+        <Link
+          href={`/print/batch/${batch.id}`}
+          className="
+            inline-block
+            px-4
+            py-2
+            bg-blue-600
+            text-white
+            rounded-xl
+            shadow-sm
+            hover:bg-blue-700
+            text-center
+          "
+        >
+          Imprimir lote
+        </Link>
+
+      </div>
 
       <h1 className="title-page">
 
@@ -115,104 +128,203 @@ export default async function BatchPage({ params }: Props) {
 
       </h1>
 
-      <p className="text-sm text-gray-500">
+      <p className="
+        text-sm
+        text-gray-500
+        mb-6
+      ">
 
-  	QR
-  	{String(
-   	 batch.qrCodes[0]?.qrNumber
-  	).padStart(4, "0")}
+        QR
+        {String(
+          batch.qrCodes[0]?.qrNumber
+        ).padStart(4, "0")}
 
-  	{" "}al{" "}
+        {" "}al{" "}
 
-  	QR
- 	{String(
-    	 batch.qrCodes[
-      	  batch.qrCodes.length - 1
-    	]?.qrNumber
-       ).padStart(4, "0")}
+        QR
+        {String(
+          batch.qrCodes[
+            batch.qrCodes.length - 1
+          ]?.qrNumber
+        ).padStart(4, "0")}
 
-       {" · "}
+        {" · "}
 
-  	Total: {batch.qrCodes.length} QR's
+        Total: {batch.qrCodes.length} QR's
 
-	</p>
+      </p>
 
-      <TableWrapper>
+      {/* DESKTOP */}
+      <div className="hidden md:block">
 
-        <thead>
+        <TableWrapper>
 
-          <tr>
+          <thead>
 
-            <Th>QR</Th>
+            <tr>
 
-            <Th>Token</Th>
+              <Th>QR</Th>
 
-            <Th>Estado</Th>
+              <Th>Token</Th>
 
-            <Th>Creado</Th>
+              <Th>Estado</Th>
 
-            <Th>Usado</Th>
+              <Th>Creado</Th>
 
-            <Th>Archivo</Th>
+              <Th>Usado</Th>
 
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {batch.qrCodes.map((qr) => (
-
-            <tr
-              key={qr.id}
-              className="border-t hover:bg-gray-50"
-            >
-
-              <Td>
-                {qr.qrNumber}
-              </Td>
-
-              <Td>
-
-                <span className="font-mono text-sm">
-
-                  {qr.token}
-
-                </span>
-
-              </Td>
-
-              <Td>
-                {qr.status}
-              </Td>
-
-              <Td>
-
-                {new Date(qr.createdAt).toLocaleString()}
-
-              </Td>
-
-              <Td>
-
-                {qr.usedAt
-                  ? new Date(qr.usedAt).toLocaleString()
-                  : "No usado"}
-
-              </Td>
-
-              <Td>
-
-                {qr.downloadPath || "-"}
-
-              </Td>
+              <Th>Archivo</Th>
 
             </tr>
 
-          ))}
+          </thead>
 
-        </tbody>
+          <tbody>
 
-      </TableWrapper>
+            {batch.qrCodes.map((qr) => (
+
+              <tr
+                key={qr.id}
+                className="
+                  border-t
+                  hover:bg-gray-50
+                "
+              >
+
+                <Td>
+                  {qr.qrNumber}
+                </Td>
+
+                <Td>
+
+                  <span className="
+                    font-mono
+                    text-sm
+                  ">
+
+                    {qr.token}
+
+                  </span>
+
+                </Td>
+
+                <Td>
+                  {qr.status}
+                </Td>
+
+                <Td>
+
+                  {new Date(
+                    qr.createdAt
+                  ).toLocaleString()}
+
+                </Td>
+
+                <Td>
+
+                  {qr.usedAt
+                    ? new Date(
+                        qr.usedAt
+                      ).toLocaleString()
+                    : "No usado"}
+
+                </Td>
+
+                <Td>
+
+                  {qr.downloadPath || "-"}
+
+                </Td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </TableWrapper>
+
+      </div>
+
+      {/* MOBILE */}
+      <div className="
+        block
+        md:hidden
+        space-y-4
+      ">
+
+        {batch.qrCodes.map((qr) => (
+
+          <div
+            key={qr.id}
+            className="
+              bg-white
+              rounded-2xl
+              shadow
+              p-4
+            "
+          >
+
+            <p className="
+              text-lg
+              font-semibold
+            ">
+
+              QR-
+              {String(qr.qrNumber)
+                .padStart(4, "0")}
+
+            </p>
+
+            <p className="
+              text-sm
+              text-gray-500
+              mt-2
+            ">
+
+              {qr.status}
+
+            </p>
+
+            <p className="
+              text-sm
+              text-gray-500
+            ">
+
+              {qr.usedAt
+                ? new Date(
+                    qr.usedAt
+                  ).toLocaleString()
+                : "No usado"}
+
+            </p>
+
+            <div className="
+              mt-4
+              flex
+              gap-2
+            ">
+
+              <Link
+                href={`/print/${qr.token}`}
+                className="
+                  button-primary
+                  flex-1
+                  text-center
+                "
+              >
+                Imprimir
+              </Link>
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+      <ScrollTopButton />
 
     </main>
 
