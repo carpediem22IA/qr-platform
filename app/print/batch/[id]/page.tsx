@@ -10,13 +10,24 @@ type Props = {
   params: Promise<{
     id: string;
   }>;
+
+  searchParams: Promise<{
+    size?: string;
+  }>;
 };
 
 export default async function PrintBatchPage({
   params,
+  searchParams,
 }: Props) {
 
   const { id } = await params;
+
+  const { size } =
+    await searchParams;
+
+  const qrSize =
+    Number(size) || 120;
 
   const batch = await prisma.batch.findUnique({
 
@@ -42,6 +53,9 @@ export default async function PrintBatchPage({
     notFound();
   }
 
+  const pdfUrl =
+    `/api/batches/${batch.id}/pdf?size=${qrSize}`;
+
   return (
 
     <main className="container-page">
@@ -54,17 +68,64 @@ export default async function PrintBatchPage({
 
         </h1>
 
-        <p className="mb-6">
+        <p className="mb-2">
 
           Total QR: {batch.qrCodes.length}
 
         </p>
 
-        <div className="mb-8">
+        <p className="mb-6 text-sm text-gray-500">
+
+          Tamaño seleccionado:
+          {" "}
+          {qrSize}px
+
+        </p>
+
+        <div
+          className="
+            flex
+            flex-wrap
+            gap-4
+            mb-8
+          "
+        >
 
           <PrintButton
             backHref={`/dashboard/batch/${batch.id}`}
           />
+
+          <a
+            href={pdfUrl}
+            target="_blank"
+            className="
+              px-4
+              py-2
+              rounded-xl
+              border
+              bg-white
+              hover:bg-gray-100
+              shadow-sm
+            "
+          >
+            Abrir PDF
+          </a>
+
+          <a
+            href={pdfUrl}
+            download
+            className="
+              px-4
+              py-2
+              rounded-xl
+              border
+              bg-white
+              hover:bg-gray-100
+              shadow-sm
+            "
+          >
+            Descargar PDF
+          </a>
 
         </div>
 
