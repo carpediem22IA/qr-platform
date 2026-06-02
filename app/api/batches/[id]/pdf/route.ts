@@ -26,6 +26,18 @@ export async function GET(
       );
     }
 
+    // Registrar impresión SOLO la primera vez
+    if (!batch.printedAt) {
+      await prisma.batch.update({
+        where: {
+          id: batch.id,
+        },
+        data: {
+         printedAt: new Date(),
+        },
+      });
+    }
+
     // ==================================================
     // PDF
     // ==================================================

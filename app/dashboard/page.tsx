@@ -12,6 +12,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [quantity, setQuantity] = useState(10);
 
+  const [stats, setStats] = useState({
+  totalBatches: 0,
+  totalQrs: 0,
+  activeQrs: 0,
+  usedQrs: 0,
+  usageRate: 0,
+});
+
   // Cargar batches
   const fetchBatches = async () => {
 
@@ -45,10 +53,31 @@ export default function DashboardPage() {
 
   };
 
+   const fetchStats = async () => {
+
+   try {
+
+     const res =
+       await fetch("/api/dashboard/stats");
+
+     const data =
+       await res.json();
+
+     setStats(data);
+
+   } catch (error) {
+
+     console.error(error);
+
+   }
+
+ };
+
   // useEffect FUERA de funciones
   useEffect(() => {
 
     fetchBatches();
+    fetchStats();
 
   }, []);
 
@@ -72,6 +101,7 @@ export default function DashboardPage() {
     });
 
     await fetchBatches();
+    await fetchStats();
 
     setLoading(false);
 
@@ -84,6 +114,68 @@ export default function DashboardPage() {
       <h1 className="title-page">
         Dashboard QR
       </h1>
+
+      <div
+  className="
+    grid
+    grid-cols-2
+    lg:grid-cols-5
+    gap-4
+    mb-8
+  "
+>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Lotes
+    </p>
+
+    <p className="text-2xl font-bold">
+      {stats.totalBatches}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      QR Totales
+    </p>
+
+    <p className="text-2xl font-bold">
+      {stats.totalQrs}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Activos
+    </p>
+
+    <p className="text-2xl font-bold">
+      {stats.activeQrs}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Usados
+    </p>
+
+    <p className="text-2xl font-bold">
+      {stats.usedQrs}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Uso %
+    </p>
+
+    <p className="text-2xl font-bold">
+      {stats.usageRate}%
+    </p>
+  </div>
+
+</div>
 
       <div className="
         flex

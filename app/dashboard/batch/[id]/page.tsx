@@ -55,6 +55,38 @@ export default async function BatchPage({
     );
   }
 
+     const totalQrs = batch.qrCodes.length;
+
+const activeQrs =
+  batch.qrCodes.filter(
+    (qr) => qr.status === "ACTIVE"
+  ).length;
+
+const usedQrs =
+  batch.qrCodes.filter(
+    (qr) => qr.status === "USED"
+  ).length;
+
+const usageRate =
+  totalQrs > 0
+    ? Math.round(
+        (usedQrs / totalQrs) * 100
+      )
+    : 0;
+
+const lastDownload =
+  batch.qrCodes
+    .filter((qr) => qr.usedAt)
+    .sort(
+      (a, b) =>
+        new Date(
+          b.usedAt!
+        ).getTime() -
+        new Date(
+          a.usedAt!
+        ).getTime()
+    )[0];
+
   return (
     <main className="container-page">
       {/* HEADER */}
@@ -109,27 +141,141 @@ export default async function BatchPage({
         LOTE {batch.batchNumber}
       </h1>
 
+      <div
+  className="
+    grid
+    grid-cols-2
+    lg:grid-cols-4
+    gap-4
+    mb-6
+  "
+>
+
+  <div
+    className="
+      bg-white
+      rounded-2xl
+      shadow
+      p-4
+    "
+  >
+    <p className="text-sm text-gray-500">
+      Total QR
+    </p>
+
+    <p className="text-2xl font-bold">
+      {totalQrs}
+    </p>
+  </div>
+
+  <div
+    className="
+      bg-white
+      rounded-2xl
+      shadow
+      p-4
+    "
+  >
+    <p className="text-sm text-gray-500">
+      Activos
+    </p>
+
+    <p className="text-2xl font-bold">
+      {activeQrs}
+    </p>
+  </div>
+
+  <div
+    className="
+      bg-white
+      rounded-2xl
+      shadow
+      p-4
+    "
+  >
+    <p className="text-sm text-gray-500">
+      Usados
+    </p>
+
+    <p className="text-2xl font-bold">
+      {usedQrs}
+    </p>
+  </div>
+
+  <div
+    className="
+      bg-white
+      rounded-2xl
+      shadow
+      p-4
+    "
+  >
+    <p className="text-sm text-gray-500">
+      Uso %
+    </p>
+
+    <p className="text-2xl font-bold">
+      {usageRate}%
+    </p>
+  </div>
+
+</div>
+
       <p
-        className="
-          text-sm
-          text-gray-500
-          mb-6
-        "
-      >
-        QR
-        {String(
-          batch.qrCodes[0]?.qrNumber
-        ).padStart(4, "0")}
-        {" "}al{" "}
-        QR
-        {String(
-          batch.qrCodes[
-            batch.qrCodes.length - 1
-          ]?.qrNumber
-        ).padStart(4, "0")}
-        {" · "}
-        Total: {batch.qrCodes.length} QR's
-      </p>
+  className="
+    text-sm
+    text-gray-500
+    mb-6
+  "
+>
+  QR
+  {String(
+    batch.qrCodes[0]?.qrNumber
+  ).padStart(4, "0")}
+  {" "}al{" "}
+  QR
+  {String(
+    batch.qrCodes[
+      batch.qrCodes.length - 1
+    ]?.qrNumber
+  ).padStart(4, "0")}
+  {" · "}
+  Total: {batch.qrCodes.length} QR's
+</p>
+
+<div
+  className="
+    bg-white
+    rounded-2xl
+    shadow-sm
+    p-4
+    mb-8
+  "
+>
+  <p className="text-sm">
+    <strong>
+      Impreso:
+    </strong>
+    {" "}
+    {batch.printedAt
+      ? new Date(
+          batch.printedAt
+        ).toLocaleString()
+      : "Pendiente"}
+  </p>
+
+  <p className="text-sm mt-2">
+    <strong>
+      Última descarga:
+    </strong>
+    {" "}
+    {lastDownload?.usedAt
+      ? new Date(
+          lastDownload.usedAt
+        ).toLocaleString()
+      : "Sin descargas"}
+  </p>
+</div>
 
       {/* EXPORTAR PDF */}
 
