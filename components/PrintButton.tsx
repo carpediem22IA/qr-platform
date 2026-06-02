@@ -6,10 +6,13 @@ import ShareButton from "@/components/ShareButton";
 
 type Props = {
   backHref?: string;
+
+  pdfUrl: string;
 };
 
 export default function PrintButton({
   backHref = "/dashboard",
+  pdfUrl,
 }: Props) {
 
   return (
@@ -50,6 +53,7 @@ export default function PrintButton({
 
     <ShareButton
       title="QR Platform"
+      pdfUrl={pdfUrl}
     />
 
   </div>

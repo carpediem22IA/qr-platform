@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 
 import { notFound } from "next/navigation";
 
+import Link from "next/link";
+
 import PrintButton from "@/components/PrintButton";
 
 import QrPrintCard from "@/components/print/QrPrintCard";
@@ -29,6 +31,21 @@ export default async function PrintBatchPage({
   const qrSize =
     Number(size) || 120;
 
+  // ==============================================
+  // ETIQUETA TAMAÑO
+  // ==============================================
+
+  const sizeLabel =
+    qrSize >= 180
+      ? "Grande"
+      : qrSize >= 120
+      ? "Mediano"
+      : "Pequeño";
+
+  // ==============================================
+  // OBTENER LOTE
+  // ==============================================
+
   const batch = await prisma.batch.findUnique({
 
     where: {
@@ -53,12 +70,20 @@ export default async function PrintBatchPage({
     notFound();
   }
 
+  // ==============================================
+  // URL PDF
+  // ==============================================
+
   const pdfUrl =
     `/api/batches/${batch.id}/pdf?size=${qrSize}`;
 
   return (
 
     <main className="container-page">
+
+      {/* ========================================== */}
+      {/* HEADER */}
+      {/* ========================================== */}
 
       <div className="print:hidden">
 
@@ -74,54 +99,77 @@ export default async function PrintBatchPage({
 
         </p>
 
-        <p className="mb-6 text-sm text-gray-500">
+        <p
+          className="
+            mb-6
+            text-sm
+            text-gray-500
+          "
+        >
 
           Tamaño seleccionado:
           {" "}
+
+          <span className="font-semibold">
+
+            [{sizeLabel}]
+
+          </span>
+
+          {" "}
+
           {qrSize}px
 
         </p>
+
+        {/* ====================================== */}
+        {/* BOTONES PRINCIPALES */}
+        {/* ====================================== */}
+
+        <div className="mb-4">
+
+          <PrintButton
+            backHref={`/dashboard/batch/${batch.id}`}
+            pdfUrl={pdfUrl}
+          />
+
+        </div>
+
+        {/* ====================================== */}
+        {/* ACCIONES SECUNDARIAS */}
+        {/* ====================================== */}
 
         <div
           className="
             flex
             flex-wrap
-            gap-4
-            mb-8
+            items-center
+            gap-3
+            text-sm
+            text-gray-500
+            mb-10
           "
         >
-
-          <PrintButton
-            backHref={`/dashboard/batch/${batch.id}`}
-          />
 
           <a
             href={pdfUrl}
             target="_blank"
             className="
-              px-4
-              py-2
-              rounded-xl
-              border
-              bg-white
-              hover:bg-gray-100
-              shadow-sm
+              hover:text-black
+              transition
             "
           >
             Abrir PDF
           </a>
 
+          <span>·</span>
+
           <a
             href={pdfUrl}
             download
             className="
-              px-4
-              py-2
-              rounded-xl
-              border
-              bg-white
-              hover:bg-gray-100
-              shadow-sm
+              hover:text-black
+              transition
             "
           >
             Descargar PDF
@@ -131,7 +179,17 @@ export default async function PrintBatchPage({
 
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      {/* ========================================== */}
+      {/* GRID QR */}
+      {/* ========================================== */}
+
+      <div
+        className="
+          grid
+          grid-cols-3
+          gap-6
+        "
+      >
 
         {batch.qrCodes.map((qr) => (
 
@@ -148,6 +206,33 @@ export default async function PrintBatchPage({
           />
 
         ))}
+
+      </div>
+
+      {/* ========================================== */}
+      {/* VOLVER */}
+      {/* ========================================== */}
+
+      <div
+        className="
+          print:hidden
+          mt-12
+          flex
+          justify-center
+        "
+      >
+
+        <Link
+          href={`/dashboard/batch/${batch.id}`}
+          className="
+            text-sm
+            text-gray-500
+            hover:text-black
+            transition
+          "
+        >
+          ← Volver al lote
+        </Link>
 
       </div>
 

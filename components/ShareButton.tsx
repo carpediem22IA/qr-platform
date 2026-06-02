@@ -2,15 +2,32 @@
 
 type Props = {
   title: string;
+
+  pdfUrl: string;
 };
 
 export default function ShareButton({
   title,
+  pdfUrl,
 }: Props) {
 
   const handleShare = async () => {
 
     try {
+
+      const response =
+        await fetch(pdfUrl);
+
+      const blob =
+        await response.blob();
+
+      const file = new File(
+        [blob],
+        `${title}.pdf`,
+        {
+          type: "application/pdf",
+        }
+      );
 
       await navigator.share({
 
@@ -18,7 +35,7 @@ export default function ShareButton({
 
         text: title,
 
-        url: window.location.href,
+        files: [file],
 
       });
 
@@ -44,7 +61,7 @@ export default function ShareButton({
         hover:bg-gray-100
       "
     >
-      Compartir
+      Compartir PDF
     </button>
 
   );

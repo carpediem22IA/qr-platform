@@ -59,12 +59,22 @@ export async function GET(
       ? Number(sizeParam)
       : 120;
 
+    const sizeLabel =
+      qrSize <= 80
+        ? "Pequeño"
+        : qrSize <= 120
+        ? "Mediano"
+        : "Grande";
+
     // ==================================================
     // MÁRGENES Y ESPACIADOS
     // ==================================================
 
     const marginX = 40;
-    const marginTop = 130;
+
+    // MÁS ESPACIO PARA NUEVA CABECERA
+
+    const marginTop = 160;
 
     const gapX = 40;
     const gapY = 65;
@@ -234,6 +244,7 @@ export async function GET(
     // ==================================================
 
     const drawHeader = (page: any) => {
+
       page.drawText(
         `LOTE #${batch.batchNumber}`,
         {
@@ -277,6 +288,28 @@ export async function GET(
           color: rgb(0.4, 0.4, 0.4),
         }
       );
+
+      page.drawText(
+        `PDF: ${sizeLabel}`,
+        {
+          x: 40,
+          y: pageHeight - 98,
+          size: 10,
+          font,
+          color: rgb(0.4, 0.4, 0.4),
+        }
+      );
+
+      page.drawText(
+        `Tamaño: ${qrSize}px`,
+        {
+          x: 40,
+          y: pageHeight - 114,
+          size: 10,
+          font,
+          color: rgb(0.4, 0.4, 0.4),
+        }
+      );
     };
 
     // ==================================================
@@ -288,6 +321,7 @@ export async function GET(
       currentPage: number,
       totalPages: number
     ) => {
+
       page.drawText(
         `Página ${currentPage}/${totalPages}`,
         {
@@ -322,6 +356,7 @@ export async function GET(
     // ==================================================
 
     for (let i = 0; i < batch.qrCodes.length; i++) {
+
       const qr = batch.qrCodes[i];
 
       const qrUrl =
@@ -413,6 +448,7 @@ export async function GET(
       // ==================================================
 
       if (currentRow >= maxRowsPerPage) {
+
         page = pdfDoc.addPage([
           pageWidth,
           pageHeight,
@@ -433,6 +469,7 @@ export async function GET(
       pdfDoc.getPageCount();
 
     for (let i = 0; i < totalPages; i++) {
+
       const currentPage =
         pdfDoc.getPage(i);
 
@@ -458,7 +495,9 @@ export async function GET(
           `inline; filename="${batch.name}.pdf"`,
       },
     });
+
   } catch (error: any) {
+
     console.error(
       "PDF ERROR:",
       error
