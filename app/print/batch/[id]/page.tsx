@@ -195,6 +195,7 @@ export default async function PrintBatchPage({
 
           <QrPrintCard
             key={qr.id}
+	    size={qrSize}
             qr={{
               qrNumber: qr.qrNumber,
               token: qr.token,
