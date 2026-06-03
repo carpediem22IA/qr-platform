@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,34 +8,22 @@ datasource db {
 }
 
 model Batch {
-
-  id           String   @id @default(cuid())
-
-  batchNumber  Int      @unique
-
-  name         String
-
-  createdAt    DateTime @default(now())
-
-  printedAt    DateTime?
-
-  qrCodes      QrCode[]
-
+  id          String    @id @default(cuid())
+  batchNumber Int       @unique
+  name        String
+  createdAt   DateTime  @default(now())
+  printedAt   DateTime?
+  qrCodes     QrCode[]
 }
+
 model QrCode {
-  id           String   @id @default(cuid())
-
-  qrNumber     Int      @unique
-
-  token        String   @unique
-
-  status       String   @default("ACTIVE")
-
-  createdAt    DateTime @default(now())
+  id           String    @id @default(cuid())
+  qrNumber     Int       @unique
+  token        String    @unique
+  status       String    @default("ACTIVE")
+  createdAt    DateTime  @default(now())
   usedAt       DateTime?
-
   downloadPath String
-
   batchId      String
-  batch        Batch    @relation(fields: [batchId], references: [id])
+  batch        Batch     @relation(fields: [batchId], references: [id])
 }

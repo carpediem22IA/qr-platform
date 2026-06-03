@@ -14,6 +14,7 @@ type Batch = {
   active: number;
   used: number;
   createdAt: string;
+  printedAt: string | null;
 };
 
 export default function BatchTable({
@@ -46,13 +47,40 @@ export default function BatchTable({
       {batches.map((batch) => (
 
         <tr
-          key={batch.id}
-          className="border-t hover:bg-gray-50"
-        >
+  	  key={batch.id}
+  	  className={`
+    	  border-t
+    	  hover:bg-gray-50
+    	  ${
+           batch.printedAt
+             ? "bg-gray-300 hover:bg-gray-300"
+             : ""
+    	  }
+  	`}
+       >
 
           <Td>
-            LOTE {batch.batchNumber}
-          </Td>
+  	   <div className="flex items-center gap-2">
+   	    <span>
+     	      LOTE {batch.batchNumber}
+    	    </span>
+
+    	    {batch.printedAt && (
+      	      <span
+        	className="
+          	 text-xs
+          	 px-2
+          	 py-0.5
+          	 rounded-full
+          	 bg-gray-600
+          	 text-white
+        	"
+      	       >
+        	Impreso
+      	       </span>
+    	     )}
+  	   </div>
+	  </Td>
 
           <Td>
             {batch.total}

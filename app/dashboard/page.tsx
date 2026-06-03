@@ -255,86 +255,106 @@ export default function DashboardPage() {
       </div>
 
       {/* MOBILE */}
-      <div className="block md:hidden space-y-4">
+<div className="block md:hidden space-y-4">
 
-        {batches.map((batch: any) => (
+  {batches.map((batch: any) => (
 
-          <div
-            key={batch.id}
-            className="
-              bg-white
-              rounded-2xl
-              shadow
-              p-4
-            "
-          >
+    <div
+      key={batch.id}
+      className="
+        bg-white
+        rounded-2xl
+        shadow
+        p-4
+      "
+    >
 
-            <p className="
-              text-lg
-              font-semibold
-            ">
+      <p
+        className="
+          text-lg
+          font-semibold
+        "
+      >
+        LOTE {batch.batchNumber}
+      </p>
 
-              LOTE {batch.batchNumber}
+      {batch.printedAt && (
 
-            </p>
+        <p
+          className="
+            inline-block
+            mt-2
+            px-2
+            py-1
+            text-xs
+            font-bold
+            rounded
+            bg-gray-500
+            text-white
+          "
+        >
+          IMPRESO
+        </p>
 
-            <p className="
-              text-sm
-              text-gray-500
-              mt-1
-            ">
+      )}
 
-              QR
-              {String(batch.firstQr)
-                .padStart(4, "0")}
+      <p
+        className="
+          text-sm
+          text-gray-500
+          mt-1
+        "
+      >
+        QR
+        {String(batch.firstQr)
+          .padStart(4, "0")}
 
-              {" "}al{" "}
+        {" "}al{" "}
 
-              QR
-              {String(batch.lastQr)
-                .padStart(4, "0")}
+        QR
+        {String(batch.lastQr)
+          .padStart(4, "0")}
+      </p>
 
-            </p>
+      <p
+        className="
+          text-sm
+          text-gray-500
+        "
+      >
+        Total: {batch.total} QR's
+      </p>
 
-            <p className="
-              text-sm
-              text-gray-500
-            ">
+      <p
+        className="
+          text-sm
+          text-gray-500
+        "
+      >
+        Activos: {batch.active}
+      </p>
 
-              Total: {batch.total} QR's
+      <div className="mt-4">
 
-            </p>
-
-            <p className="
-              text-sm
-              text-gray-500
-            ">
-
-              Activos: {batch.active}
-
-            </p>
-
-            <div className="mt-4">
-
-              <Link
-                href={`/dashboard/batch/${batch.id}`}
-                className="
-                  button-primary
-                  w-full
-                  inline-block
-                  text-center
-                "
-              >
-                Ver lote
-              </Link>
-
-            </div>
-
-          </div>
-
-        ))}
+        <Link
+          href={`/dashboard/batch/${batch.id}`}
+          className="
+            button-primary
+            w-full
+            inline-block
+            text-center
+          "
+        >
+          Ver lote
+        </Link>
 
       </div>
+
+    </div>
+
+  ))}
+
+</div>
 
     </main>
 

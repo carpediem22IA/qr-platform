@@ -36,6 +36,11 @@ export async function GET(
          printedAt: new Date(),
         },
       });
+
+     console.log(
+       "PRINTED AT:",
+       updatedBatch.printedAt
+      );
     }
 
     // ==================================================
