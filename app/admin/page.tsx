@@ -90,72 +90,178 @@ export default async function AdminPage({
 
       </p>
 
-      <TableWrapper>
+      {/* DESKTOP */}
+<div className="hidden md:block">
 
-        <thead>
+  <TableWrapper>
 
-          <tr>
+    <thead>
 
-            <Th>QR</Th>
-            <Th>Lote</Th>
-            <Th>Estado</Th>
-            <Th>Token</Th>
-            <Th>Creado</Th>
-            <Th>Usado</Th>
-            <Th>Archivo</Th>
+      <tr>
 
-          </tr>
+        <Th>QR</Th>
+        <Th>Lote</Th>
+        <Th>Estado</Th>
+        <Th>Token</Th>
+        <Th>Creado</Th>
+        <Th>Usado</Th>
+        <Th>Archivo</Th>
 
-        </thead>
+      </tr>
 
-        <tbody>
+    </thead>
 
-          {qrCodes.map((qr) => (
+    <tbody>
 
-            <tr
-              key={qr.id}
-              className="border-t hover:bg-gray-50"
-            >
+      {qrCodes.map((qr) => (
 
-              <Td>
-                QR-{String(qr.qrNumber).padStart(4, "0")}
-              </Td>
+        <tr
+          key={qr.id}
+          className="border-t hover:bg-gray-50"
+        >
 
-              <Td>
-                LOTE {qr.batch?.batchNumber}
-              </Td>
+          <Td>
+            QR-{String(qr.qrNumber).padStart(4, "0")}
+          </Td>
 
-              <Td>
-                {qr.status}
-              </Td>
+          <Td>
+            LOTE {qr.batch?.batchNumber}
+          </Td>
 
-              <Td className="font-mono text-sm">
-                {qr.token}
-              </Td>
+          <Td>
+            {qr.status}
+          </Td>
 
-              <Td>
-                {new Date(qr.createdAt).toLocaleString()}
-              </Td>
+          <Td className="font-mono text-sm">
+            {qr.token}
+          </Td>
 
-              <Td>
+          <Td>
+            {new Date(qr.createdAt).toLocaleString()}
+          </Td>
 
-                {qr.usedAt
-                  ? new Date(qr.usedAt).toLocaleString()
-                  : "No usado"}
+          <Td>
 
-              </Td>
+            {qr.usedAt
+              ? new Date(qr.usedAt).toLocaleString()
+              : "No usado"}
 
-              <Td>
-                {qr.downloadPath || "-"}
-              </Td>
+          </Td>
 
-            </tr>
+          <Td>
+            {qr.downloadPath || "-"}
+          </Td>
 
-          ))}
+        </tr>
 
-        </tbody>
+      ))}
 
-      </TableWrapper>
+    </tbody>
+
+  </TableWrapper>
+
+</div>
+
+  {/* MOBILE */}
+<div className="block md:hidden space-y-4">
+
+  {qrCodes.map((qr) => (
+
+    <div
+      key={qr.id}
+      className="
+        bg-white
+        rounded-2xl
+        shadow
+        p-4
+      "
+    >
+
+      <div className="flex justify-between items-start">
+
+        <p
+          className="
+            text-lg
+            font-semibold
+          "
+        >
+          QR-{String(qr.qrNumber).padStart(4, "0")}
+        </p>
+
+        <span
+          className={`
+            px-2
+            py-1
+            text-xs
+            font-bold
+            rounded
+            ${
+              qr.status === "USED"
+                ? "bg-red-500 text-white"
+                : "bg-green-500 text-white"
+            }
+          `}
+        >
+          {qr.status}
+        </span>
+
+      </div>
+
+      <p className="text-sm text-gray-500 mt-2">
+        LOTE {qr.batch?.batchNumber}
+      </p>
+
+      <p className="text-sm text-gray-500">
+        Creado:{" "}
+        {new Date(qr.createdAt).toLocaleDateString()}
+      </p>
+
+      <p className="text-sm text-gray-500">
+        Usado:{" "}
+        {qr.usedAt
+          ? new Date(qr.usedAt).toLocaleDateString()
+          : "No usado"}
+      </p>
+
+      <div className="flex gap-2 mt-4">
+
+        <button
+          className="
+            flex-1
+            px-3
+            py-2
+            rounded-lg
+            bg-blue-600
+            text-white
+            text-sm
+            font-medium
+          "
+        >
+          Editar
+        </button>
+
+        <button
+          className="
+            flex-1
+            px-3
+            py-2
+            rounded-lg
+            bg-red-600
+            text-white
+            text-sm
+            font-medium
+          "
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  ))}
+
+</div>
 
       <div className="
         flex

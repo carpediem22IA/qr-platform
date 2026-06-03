@@ -5,99 +5,138 @@ import path from "path";
 
 export async function POST(request: Request) {
 
-  const body = await request.json();
+  try {
 
-  const quantity = Number(body.quantity);
+    const body = await request.json();
 
-  // Último QR creado
-  const lastQr = await prisma.qrCode.findFirst({
+    const quantity = Number(body.quantity);
 
-    orderBy: {
-      qrNumber: "desc",
-    },
+    // Último QR creado
+    const lastQr =
+      await prisma.qrCode.findFirst({
 
-  });
+        orderBy: {
+          qrNumber: "desc",
+        },
 
-  let currentNumber = lastQr?.qrNumber || 0;
+      });
 
-  // Último lote creado
-  const lastBatch = await prisma.batch.findFirst({
+    let currentNumber =
+      lastQr?.qrNumber || 0;
 
-    orderBy: {
-      batchNumber: "desc",
-    },
+    // Último lote creado
+    const lastBatch =
+      await prisma.batch.findFirst({
 
-  });
+        orderBy: {
+          batchNumber: "desc",
+        },
 
-  // Siguiente número de lote
-  const nextBatchNumber =
-    lastBatch
-      ? lastBatch.batchNumber + 1
-      : 1;
+      });
 
-  // Crear lote
-  const batch = await prisma.batch.create({
+    // Siguiente lote
+    const nextBatchNumber =
+      lastBatch
+        ? lastBatch.batchNumber + 1
+        : 1;
 
-    data: {
+    // Crear lote
+    const batch =
+      await prisma.batch.create({
 
-      batchNumber: nextBatchNumber,
+        data: {
 
-      name: `LOTE-${nextBatchNumber}`,
+          batchNumber:
+            nextBatchNumber,
 
-    },
+          name:
+            `LOTE-${nextBatchNumber}`,
 
-  });
+        },
 
-  // Crear QR masivos
-  const qrData = [];
+      });
 
-  for (let i = 0; i < quantity; i++) {
+    const qrData = [];
 
-    currentNumber++;
+    for (
+      let i = 0;
+      i < quantity;
+      i++
+    ) {
 
-    const token = nanoid();
+      currentNumber++;
 
-    const qrUrl = `http://localhost:3000/q/${token}`;
+      const token = nanoid();
 
-    const qrPath = path.join(
-      process.cwd(),
-      "public",
-      "qrcodes",
-      `${token}.png`
-    );
+      const qrUrl =
+        `http://localhost:3000/q/${token}`;
 
-    await QRCode.toFile(qrPath, qrUrl);
+      const qrPath = path.join(
+        process.cwd(),
+        "public",
+        "qrcodes",
+        `${token}.png`
+      );
 
-    qrData.push({
+      await QRCode.toFile(
+        qrPath,
+        qrUrl
+      );
 
-      qrNumber: currentNumber,
+      qrData.push({
 
-      token,
+        qrNumber:
+          currentNumber,
 
-      status: "ACTIVE",
+        token,
 
-      downloadPath: "/downloads/regalo.zip",
+        status: "ACTIVE",
 
-      batchId: batch.id,
+        downloadPath:
+          "/downloads/regalo.zip",
+
+        batchId:
+          batch.id,
+
+      });
+
+    }
+
+    await prisma.qrCode.createMany({
+
+      data: qrData,
 
     });
 
+    return Response.json({
+
+      success: true,
+
+      batch,
+
+      created: quantity,
+
+    });
+
+  } catch (error: any) {
+
+    console.error(
+      "CREATE QR ERROR:",
+      error
+    );
+
+    return Response.json(
+      {
+        success: false,
+        error:
+          error?.message ||
+          "Error desconocido",
+      },
+      {
+        status: 500,
+      }
+    );
+
   }
-
-  await prisma.qrCode.createMany({
-
-    data: qrData,
-
-  });
-
-  return Response.json({
-
-    success: true,
-
-    batch,
-
-    created: quantity,
-
-  });
 
 }
