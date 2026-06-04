@@ -1,5 +1,6 @@
 type Props = {
   children: React.ReactNode;
+  className?: string;
 };
 
 export function TableWrapper({ children }: Props) {
@@ -29,30 +30,26 @@ export function TableWrapper({ children }: Props) {
 
 }
 
-export function Th({ children }: Props) {
-
+export function Th({
+  children,
+  className = "",
+}: Props) {
   return (
-
-    <th className="px-6 py-4 text-left bg-gray-100 font-semibold">
-
+    <th
+      className={`px-6 py-4 text-left bg-gray-100 font-semibold ${className}`}
+    >
       {children}
-
     </th>
-
   );
-
 }
 
-export function Td({ children }: Props) {
-
+export function Td({
+  children,
+  className = "",
+}: Props) {
   return (
-
-    <td className="px-6 py-4">
-
+    <td className={`px-6 py-4 ${className}`}>
       {children}
-
     </td>
-
   );
-
 }

@@ -507,7 +507,7 @@ const lastDownload =
 
               <Th>Usado</Th>
 
-              <Th>Archivo</Th>
+              {/* <Th>Archivo</Th> */}
             </tr>
           </thead>
 
@@ -536,8 +536,22 @@ const lastDownload =
                 </Td>
 
                 <Td>
-                  {qr.status}
-                </Td>
+  <div className="flex items-center gap-2">
+    <span
+      className={`w-3 h-3 rounded-full ${
+        qr.status === "ACTIVE"
+          ? "bg-green-500"
+          : "bg-red-500"
+      }`}
+    />
+
+    <span className="text-sm">
+      {qr.status === "ACTIVE"
+        ? "Activo"
+        : "USED"}
+    </span>
+  </div>
+</Td>
 
                 <Td>
                   {new Date(
@@ -545,17 +559,23 @@ const lastDownload =
                   ).toLocaleString()}
                 </Td>
 
-                <Td>
-                  {qr.usedAt
-                    ? new Date(
-                        qr.usedAt
-                      ).toLocaleString()
-                    : "No usado"}
-                </Td>
+                <Td className="text-center">
+  {qr.usedAt
+    ? new Date(qr.usedAt).toLocaleString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "-"}
+</Td>
 
-                <Td>
-                  {qr.downloadPath || "-"}
-                </Td>
+                {/*
+<Td>
+  {qr.downloadPath || "-"}
+</Td>
+*/}
               </tr>
             ))}
           </tbody>

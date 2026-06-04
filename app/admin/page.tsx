@@ -28,6 +28,23 @@ export default async function AdminPage({
 
   const totalQrs = await prisma.qrCode.count();
 
+  const totalBatches =
+    await prisma.batch.count();
+
+  const activeQrs =
+    await prisma.qrCode.count({
+      where: {
+        status: "ACTIVE",
+      },
+    });
+
+  const usedQrs =
+    await prisma.qrCode.count({
+      where: {
+        status: "USED",
+      },
+    });
+
   const totalPages = Math.ceil(
     totalQrs / limit
   );
@@ -80,15 +97,63 @@ export default async function AdminPage({
 
       </div>
 
-      <p className="text-sm text-gray-500 mb-3">
+      <div
+  className="
+    grid
+    grid-cols-2
+    lg:grid-cols-4
+    gap-4
+    mb-8
+  "
+>
 
-  	QR {String(qrCodes[0]?.qrNumber).padStart(4, "0")}
-  	   {" "}al{" "}
-  	   QR {String(
-    	   qrCodes[qrCodes.length - 1]?.qrNumber
-    	   ).padStart(4, "0")}
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      QR Totales
+    </p>
 
-      </p>
+    <p className="text-2xl font-bold">
+      {totalQrs}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Activos
+    </p>
+
+    <p className="text-2xl font-bold">
+      {activeQrs}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Usados
+    </p>
+
+    <p className="text-2xl font-bold">
+      {usedQrs}
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-4">
+    <p className="text-sm text-gray-500">
+      Lotes
+    </p>
+
+    <p className="text-2xl font-bold">
+      {totalBatches}
+    </p>
+  </div>
+
+</div>
+
+    <p className="text-sm text-gray-500 mb-3">
+	 {qrCodes[0]?.qrNumber}
+     {" "}al{" "}
+     {qrCodes[qrCodes.length - 1]?.qrNumber}
+    </p>
 
       {/* DESKTOP */}
 <div className="hidden md:block">
@@ -105,7 +170,8 @@ export default async function AdminPage({
         <Th>Token</Th>
         <Th>Creado</Th>
         <Th>Usado</Th>
-        <Th>Archivo</Th>
+        {/* <Th>Archivo</Th> */} 
+		<Th>Acciones</Th>
 
       </tr>
 
@@ -121,36 +187,119 @@ export default async function AdminPage({
         >
 
           <Td>
-            QR-{String(qr.qrNumber).padStart(4, "0")}
+            {qr.qrNumber}
           </Td>
 
           <Td>
-            LOTE {qr.batch?.batchNumber}
+            {qr.batch?.batchNumber}
           </Td>
 
           <Td>
-            {qr.status}
-          </Td>
+  <div className="flex justify-center">
+    <span
+      className={`w-3 h-3 rounded-full ${
+        qr.status === "ACTIVE"
+          ? "bg-green-500"
+          : "bg-red-500"
+      }`}
+      title={qr.status}
+    />
+  </div>
+</Td>
 
           <Td className="font-mono text-sm">
-            {qr.token}
+            {qr.token.slice(0, 8)}...
           </Td>
 
           <Td>
-            {new Date(qr.createdAt).toLocaleString()}
-          </Td>
+  {new Date(qr.createdAt).toLocaleString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  })}
+</Td>
 
           <Td>
+  {qr.usedAt ? (
+    new Date(qr.usedAt).toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  ) : (
+    <div className="w-full text-center">-</div>
+  )}
+</Td>
 
-            {qr.usedAt
-              ? new Date(qr.usedAt).toLocaleString()
-              : "No usado"}
+          {/* 
+<Td>
+  {qr.downloadPath || "-"}
+</Td>
+*/}
 
-          </Td>
+<Td>
 
-          <Td>
-            {qr.downloadPath || "-"}
-          </Td>
+  <div className="flex gap-1">
+
+    <button
+      className="
+        px-2
+        py-1
+        text-xs
+        rounded
+        bg-blue-600
+        text-white
+      "
+    >
+      Editar
+    </button>
+
+    <button
+      className="
+        px-2
+        py-1
+        text-xs
+        rounded
+        bg-green-600
+        text-white
+      "
+    >
+      Imprimir
+    </button>
+
+    <button
+      className="
+        px-2
+        py-1
+        text-xs
+        rounded
+        bg-purple-600
+        text-white
+      "
+    >
+      Compartir
+    </button>
+
+    <button
+      className="
+        px-2
+        py-1
+        text-xs
+        rounded
+        bg-red-600
+        text-white
+      "
+    >
+      Eliminar
+    </button>
+
+  </div>
+
+</Td>
 
         </tr>
 
