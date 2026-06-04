@@ -10,7 +10,7 @@ export default function DashboardPage() {
 
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [quantity, setQuantity] = useState(10);
+  const [quantity, setQuantity] = useState(100);
 
   const [stats, setStats] = useState({
   totalBatches: 0,
@@ -86,19 +86,20 @@ export default function DashboardPage() {
 
     setLoading(true);
 
-    await fetch("/api/create-qr", {
+    const res = await fetch("/api/create-qr", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    quantity,
+  }),
+});
 
-      method: "POST",
+const text = await res.text();
 
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        quantity,
-      }),
-
-    });
+console.log("CREATE QR RESPONSE:");
+console.log(text);
 
     await fetchBatches();
     await fetchStats();
@@ -177,39 +178,46 @@ export default function DashboardPage() {
 
 </div>
 
-      <div className="
-        flex
-        flex-col
-        sm:flex-row
-        gap-4
-        mb-6
-      ">
+      <div
+		className="
+		flex
+		flex-col
+		sm:flex-row
+		sm:items-end
+		gap-4
+		mb-6
+	   "
+	 >
 
-        <select
-          id="quantity"
-          name="quantity"
-          value={quantity}
-          onChange={(e) =>
-            setQuantity(Number(e.target.value))
-          }
-          className="
-            border
-            px-3
-            py-2
-            rounded
-            bg-white
-            w-full
-            sm:w-auto
-          "
-        >
-
-          <option value={10}>10 QR</option>
-          <option value={20}>20 QR</option>
-          <option value={30}>30 QR</option>
-          <option value={40}>40 QR</option>
-          <option value={50}>50 QR</option>
-
-        </select>
+       <div className="flex flex-col">
+		<label
+		 htmlFor="quantity"
+		 className="text-sm font-medium"
+		>
+		 Cantidad de QR
+		</label>
+  
+        <input
+		id="quantity"
+		name="quantity"
+		type="number"
+		min="1"
+		max="1000"
+		value={quantity}
+		onChange={(e) =>
+			setQuantity(Number(e.target.value))
+		}
+		className="
+		border
+		px-3
+		py-2
+		rounded
+		bg-white
+		w-full
+		sm:w-32
+		"
+	   />
+	  </div>
 
         <button
           onClick={createQR}
