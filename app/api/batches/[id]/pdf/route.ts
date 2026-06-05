@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { prisma } from "@/lib/prisma";
 import QRCode from "qrcode";
 
+
 export async function GET(
-  request: Request,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -37,10 +38,7 @@ export async function GET(
         },
       });
 
-     console.log(
-       "PRINTED AT:",
-       updatedBatch.printedAt
-      );
+     
     }
 
     // ==================================================

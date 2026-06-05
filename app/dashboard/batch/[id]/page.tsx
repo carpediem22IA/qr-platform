@@ -266,7 +266,7 @@ const lastDownload =
 
   <p className="text-sm mt-2">
     <strong>
-      Última descarga:
+      Último Uso:
     </strong>
     {" "}
     {lastDownload?.usedAt

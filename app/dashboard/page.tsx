@@ -23,35 +23,23 @@ export default function DashboardPage() {
   // Cargar batches
   const fetchBatches = async () => {
 
-    try {
+  try {
 
-      const res = await fetch("/api/batches");
+    const res = await fetch("/api/batches");
 
-      const data = await res.json();
+    const data = await res.json();
 
-      console.log("BATCH DATA:", data);
+    setBatches(data);
 
-      if (Array.isArray(data)) {
+  } catch (error) {
 
-        setBatches(data);
+    console.error(error);
 
-      } else {
+    setBatches([]);
 
-        console.error("API ERROR:", data);
+  }
 
-        setBatches([]);
-
-      }
-
-    } catch (error) {
-
-      console.error(error);
-
-      setBatches([]);
-
-    }
-
-  };
+};
 
    const fetchStats = async () => {
 
@@ -86,20 +74,15 @@ export default function DashboardPage() {
 
     setLoading(true);
 
-    const res = await fetch("/api/create-qr", {
-  method: "POST",
-  headers: {
+  await fetch("/api/create-qr", {
+   method: "POST",
+   headers: {
     "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
+   },
+   body: JSON.stringify({
     quantity,
-  }),
-});
-
-const text = await res.text();
-
-console.log("CREATE QR RESPONSE:");
-console.log(text);
+   }),
+ });
 
     await fetchBatches();
     await fetchStats();
@@ -202,7 +185,7 @@ console.log(text);
 		name="quantity"
 		type="number"
 		min="1"
-		max="1000"
+		max="200"
 		value={quantity}
 		onChange={(e) =>
 			setQuantity(Number(e.target.value))

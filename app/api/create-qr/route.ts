@@ -10,6 +10,21 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const quantity = Number(body.quantity);
+	if (
+	 !Number.isInteger(quantity) ||
+   	 quantity < 1 ||
+	 quantity > 200
+  ) {
+	return Response.json(
+    {
+      success: false,
+      error: "Cantidad inválida",
+    },
+    {
+      status: 400,
+    }
+  );
+}
 
     // Último QR creado
     const lastQr =
